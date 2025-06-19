@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCollectibles 1.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Schermata Aggiungi -->
+        <div class="screen" id="add-screen">
+            <header>
+                <h1><i class="fas fa-plus-circle"></i> Aggiungi Oggetto</h1>
+                <div class="sync-status" id="sync-status"><i class="fas fa-cloud"></i> <span>Disconnesso</span></div>
+            </header>
+            
+            <form id="add-form" enctype="multipart/form-data">
+                <input type="hidden" id="item-id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="item-name"><i class="fas fa-tag"></i> Nome *</label>
+                        <input type="text" id="item-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-category"><i class="fas fa-list"></i> Categoria *</label>
+                        <select id="item-category" required>
+                            <option value="">Seleziona...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="item-value"><i class="fas fa-euro-sign"></i> Valore</label>
+                        <input type="number" id="item-value" step="0.01" min="0" oninput="validity.valid||(value='');">
+                    </div>
+                    <div class="form-group">
+                        <label for="item-date"><i class="fas fa-calendar"></i> Data</label>
+                        <input type="date" id="item-date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-notes"><i class="fas fa-sticky-note"></i> Note</label>
+                    <textarea id="item-notes" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-image"><i class="fas fa-camera"></i> Immagine (max 2MB)</label>
+                    <input type="file" id="item-image" accept="image/*">
+                    <div id="image-preview" class="image-preview"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salva</button>
+                    <button type="button" class="btn-secondary" id="scan-barcode"><i class="fas fa-barcode"></i> Scannerizza</button>
+                </div>
+            </form>
+
+            <button class="switch-btn" onclick="showScreen('view-screen')">
+                <i class="fas fa-arrow-right"></i> Vedi Collezione
+            </button>
+        </div>
+
+        <!-- Schermata Visualizza -->
+        <div class="screen" id="view-screen">
+            <header>
+                <h1><i class="fas fa-collection"></i> La Tua Collezione</h1>
+                <div class="stats">
+                    <span id="item-count">0 oggetti</span>
+                    <span id="total-value">€0.00</span>
+                </div>
+            </header>
+
+            <div class="toolbar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Cerca...">
+                </div>
+                <select id="category-filter">
+                    <option value="all">Tutte le categorie</option>
+                </select>
+                <button id="export-btn"><i class="fas fa-file-export"></i> Esporta</button>
+                <button id="sync-btn"><i class="fas fa-sync-alt"></i> Sincronizza</button>
+            </div>
+
+            <div id="collection-list" class="collection-grid"></div>
+
+            <button class="switch-btn" onclick="showScreen('add-screen')">
+                <i class="fas fa-arrow-left"></i> Torna indietro
+            </button>
+        </div>
+
+        <!-- Modal Scanner -->
+        <div id="scanner-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Scannerizza Codice</h2>
+                <div id="scanner-container"></div>
+                <div id="scanner-result"></div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast-container"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
